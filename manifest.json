@@ -5,7 +5,7 @@
   "description": "",
   "version": "1.0.0",
   "browser_action": {
-   "default_icon": "phrasal.png"
+   "default_icon": "icon.png"
   },
   "background": {
     "scripts": ["background.js"],
@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["getHighlighted.js", "indexTab.js"],
+      "js": ["getHighlighted.js", "index.js"],
       "run_at": "document_start"
     }
   ],

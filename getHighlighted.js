@@ -1,7 +1,3 @@
-// this file affects the dom of the active tab
-// when the extension button is clicked
-
-
 // This function gets whatever text is highlighted when the button is clicked
 function getSelectionText() {
   let text = "";
