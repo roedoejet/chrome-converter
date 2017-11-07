@@ -1,6 +1,11 @@
 // this is the event listener for the button on the chrome browser
+function decode_utf8(s) {
+  return decodeURIComponent(escape(s));
+}
+
+
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.tabs.create({}, function(newtab){
+  chrome.tabs.create({url: "index.html"}, function(newtab){
     // Check to see if I'm accessing the right tab
     console.log(tab.id);
     // send a message to the content script (getHighlighited.js) that gets highlighted text

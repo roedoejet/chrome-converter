@@ -21,8 +21,5 @@
   "permissions": [
          "tabs",
          "<all_urls>"
-       ],
-  "chrome_url_overrides" : {
-    "newtab" : "index.html"
-  }
+       ]
 }
