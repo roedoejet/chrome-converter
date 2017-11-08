@@ -10,8 +10,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     console.log(tab.id);
     // send a message to the content script (getHighlighited.js) that gets highlighted text
     chrome.tabs.sendMessage(tab.id, {todo: "Give me something"}, function(highlighted){
-      chrome.tabs.sendMessage(newtab.id, {response, highlighted}, function(reply){
-      console.log(reply);
+      chrome.tabs.sendMessage(newtab.id, {highlighted}, function(reply){
       })
 
     })
