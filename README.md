@@ -1,5 +1,7 @@
 # chrome-converter
 
-Currently the project takes a highlighted phrase from any tab where the extension is running, and prints that phrase in a new tab when the extension button is pressed.
+This branch converts all text on page from Heiltsuk Duolos to Unicode. It also converts all a's to 7's just to make the changes more obvious. To initiate the conversion you must click the icon.
 
-The next task is to encode the highighted phrase as a unicode code ('\u0301' for example) before printing it to the page.  I think I need to import some kind of module or piece of javascript to achieve this.
+This should be combined with the master branch by converting only highlighted text if there is highlighted text.
+
+It should also have a dropdown menu to select what conversion (Heiltsuk Duolos/Heiltsuk Times or Chilcotin)
