@@ -23,3 +23,16 @@ function retrieve_options(){
 
 document.addEventListener('DomContentLoaded', retrieve_options);
 document.getElementById('save').addEventListener('click', save_options);
+
+
+// testing to see if the options actually saved and are retrievable:
+// let retrievable;
+// function retrieve_options(){
+//   chrome.storage.sync.get({
+//     selectedLanguage: 'A',
+//   }, function(items){
+//     retrievable = items.selectedLanguage;
+//   })
+// }
+
+// it works!
