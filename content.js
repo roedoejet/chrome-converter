@@ -1,3 +1,4 @@
+
 function getElements(isStart) {
     if (window.getSelection() || document.selection) {
         sel = window.getSelection()
@@ -65,19 +66,32 @@ var convertText = function(text, input, output) {
     }
 };
 
+// this gets the language option from chrome storage when called
+// as it works now as a callback, whatever code we write which uses the option
+// must be in the callback chain to get the selectedLanguage value.  
+// Using a Promise library to promisify these types of functions would
+// clean up our code
+function retrieve_options(){
+  chrome.storage.sync.get(null, function(items){
+    let selectedLanguage = items.selectedLanguage
 
-for (var i = 0; i < elements.length; i++) {
-    var element = elements[i];
 
-    for (var j = 0; j < element.childNodes.length; j++) {
-        var node = element.childNodes[j];
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
 
-        if (node.nodeType === 3) {
-            var text = node.nodeValue;
-            var replacedText = convertText(text, "Heiltsuk Duolos", "Unicode")
-            if (replacedText !== text) {
-                element.replaceChild(document.createTextNode(replacedText), node);
+        for (var j = 0; j < element.childNodes.length; j++) {
+            var node = element.childNodes[j];
+
+            if (node.nodeType === 3) {
+                var text = node.nodeValue;
+                var replacedText = convertText(text, "Heiltsuk Duolos", "Unicode")
+                if (replacedText !== text) {
+                    element.replaceChild(document.createTextNode(replacedText), node);
+                }
             }
         }
     }
+
+// closing the retrieve_options callback function
+  })
 }
