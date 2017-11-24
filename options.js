@@ -1,12 +1,13 @@
 // this is pretty boilerplate right now, It could use some customization
-// save the language option into chrom storagee
+// save the language option into chrome storagee
+console.log("options.js loaded")
 function save_options(){
-
-  let language = document.getElementById('language')
+  var language = document.getElementById('language').value;
   chrome.storage.sync.set({
     selectedLanguage: language
   }, function() {
-    let status = document.getElementById('status');
+    console.log("sucessfully set option")
+    var status = document.getElementById('status');
     status.textContent = "Language Saved";
   })
 }

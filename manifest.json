@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Convertextract",
-    "options_page":"options.html",
+    "options_page": "options.html",
     "description": "Convert all Heiltsuk Duolos characters",
     "version": "1.0",
     "background": {
