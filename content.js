@@ -1,3 +1,12 @@
+// So this function returns a HTML collection, which is then looped over by the
+// two loops at the bottom of the file.  Our problem comes with the first and last
+// node in the range, because this function just gets the whole node rather than
+// only the chunk that is needed.
+
+// The solution is to remove the first and last node in the HTMLCollection, and
+// write a function which only gets the highlighted text within those two nodes.
+// All other nodes will be passed to the two loops.
+
 function getElements(isStart) {
     if (window.getSelection() || document.selection) {
         sel = window.getSelection()
