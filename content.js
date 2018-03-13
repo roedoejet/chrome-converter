@@ -48,8 +48,8 @@ function getElements(isStart) {
     }
 }
 
-let elements = getElements(false);
-
+//var elements = getElements(false);
+console.log(elements)
 // if there the highlighted text only spans one node, we need to only replace
 // the content within that node that is highlighted
 
@@ -60,16 +60,16 @@ if (elements.length === 1){
   elements = elements.slice(1)
 // if nothing is highlighted, we want to translate the whole page, so nothing
 // needs to go here
-} else if (window.getSelection().toString()===""){
+} else if (window.getSelection().toString() === ""){
   console.log("The whole page should get highlighted, there is no need for partial translation of a node");
   // else there are at least two nodes, in which case we need to remove the
   // first and last element from elements, and replace only the highlighted
   // text within
 } else{
   let firstNode = elements[0];
-  let lastNode = elements[elements.length-1];
+  let lastNode = elements[elements.length - 1];
   // remove those nodes from the list to be converted
-  elements = elements.slice(1, elements.length-1)
+  elements = elements.slice(1, elements.length - 1)
   // I still need to check to see if this causes errors later if elements is empty
   // which can happen if the highlighted text only spans two nodes
 }
