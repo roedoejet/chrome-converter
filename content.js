@@ -99,6 +99,11 @@ if (selection.anchorNode === selection.focusNode){
   // else there are at least two nodes, in which case we need to remove the
   // first and last element from elements, and replace only the highlighted
   // text within
+
+  // if there are two nodes
+} else if (selection.anchorNode.nextSibling.nextSibling === selection.focusNode){
+
+// there are more than two nodes
 } else{
   let firstNode = elements[0];
   let lastNode = elements[elements.length - 1];
