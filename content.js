@@ -77,11 +77,14 @@ function getElements(isStart) {
 }
 
 var elements = getElements(false);
-console.log(elements, elements[0].children)
+
 // if there the highlighted text only spans one node, we need to only replace
 // the content within that node that is highlighted
 var selection = window.getSelection()
 var range = selection.getRangeAt(0)
+//console.log(range.endContainer)
+var savedEndContainer = range.endContainer
+var alreadyTranslated = [];
 // this one will be fine using anchorNode and focusNode
 if (selection.anchorNode === selection.focusNode){
   l("the selection spans only one node")
@@ -103,7 +106,8 @@ if (selection.anchorNode === selection.focusNode){
   // first and last element from elements, and replace only the highlighted
   // text within
   // if the highlighted text spans two nodes... this syntax makes me sad but it should be fine
-} else if (range["startContainer"].nextSibling === range["endContainer"].parentNode){
+} else {
+  // l(`elements: ${elements}`)
   // so using anchor/focus nodes is a problem because they can be swapped depending on which way the user creates the selection
   // so i need to use ranges here
   l("the selection spans at least 2 nodes")
@@ -120,33 +124,51 @@ if (selection.anchorNode === selection.focusNode){
   parentOfStart.replaceChild(document.createTextNode(translatedStartNodeText), range["startContainer"])
 
   // tanslate the partial text within the last node in the range
-  let endText = range["endContainer"].textContent;
+  let endText = savedEndContainer.textContent;
   let secondOverlap = findOverlap(endText, highlighted)
   let subtractedEnd = subtractString(endText, secondOverlap)
   let translatedEnd = convertText(secondOverlap, "Heiltsuk Duolos", "Unicode")
   let translatedEndNodeText = [subtractedEnd[0].slice(0, subtractedEnd[1]), translatedEnd, subtractedEnd[0].slice(subtractedEnd[1])].join("");
-  let parentOfEnd = range["endContainer"].parentNode
-  parentOfEnd.replaceChild(document.createTextNode(translatedEndNodeText), range["endContainer"])
+  let parentOfEnd = savedEndContainer.parentNode
+  parentOfEnd.replaceChild(document.createTextNode(translatedEndNodeText), savedEndContainer)
 
- // remove the two nodes that we've just manually translated
-  let firstNode = elements[0];
-  let lastNode = elements[elements.length - 1];
-  // remove those nodes from the list to be converted
-  elements = elements.slice(1, elements.length - 1)
-
-// there are more than two nodes
-} else{
-  l("the selection spans more than two nodes")
-
-
-
-  // let firstNode = elements[0];
-  // let lastNode = elements[elements.length - 1];
-  // // remove those nodes from the list to be converted
-  // elements = elements.slice(1, elements.length - 1)
-  // I still need to check to see if this causes errors later if elements is empty
-  // which can happen if the highlighted text only spans two nodes
+ // now i need to prevent the nodes I've just translated from being retranslated at the bottom
+ // Here i need to loop over all the children of the start container and the end container and
+ // get the first non Element child (the first text node)
+ if (range.startContainer.nodeType === 3){
+   alreadyTranslated[0] = range.startContainer
+ } else {
+   for (let child of range.startContainer.childNodes){
+     if (child.nodeType === 3){
+       alreadyTranslated[0] = child
+       break;
+     }
+ }
 }
+
+console.log(savedEndContainer, savedEndContainer.nodeType)
+
+if (savedEndContainer === 3){
+  console.log("range.endContainer is a textnode")
+  alreadyTranslated[1] = savedEndContainer
+} else {
+  var endChildren = savedEndContainer.childNodes
+  for (let x = (endChildren.length-1); x > 0; x--){
+    if (endChildren[x].nodeType === 3){
+      alreadyTranslated[1] = endChildren[x];
+      break;
+   }
+ }
+}
+
+// console.log("start text", alreadyTranslated[0], startText, "endText", endText, alreadyTranslated[1], "-------------------------highlighted-------------------------", highlighted)
+ // simply removing them from the elements object isn't working as intended
+
+ // maybe I can create list that will be checked when elements is to be translated
+ // and skip the ones that are repeats???
+
+}
+
 
 
 
@@ -164,6 +186,8 @@ function subtractString(main, sub){
   }
 }
 
+// this is doesn't work, but I haven't gotten around to debugging it.
+
 function replacePartialNodeText(node, selectedText, func){
   let totalNodeText = node.textContent
   let subtracted = subtractString(totalNodeText, selectedText);
@@ -174,6 +198,9 @@ function replacePartialNodeText(node, selectedText, func){
   let parentOfSelected = node.parentNode
   parentOfSelected.replaceChild(document.createTextNode(translatedTotalNodeText), node);
 }
+
+// taken directly from a blog, it works well.  I haven't used .endsWith before
+// it does exceed callstack sometimes though, I should optimise it eventually
 
 function findOverlap(a, b) {
   if (b.length === 0) {
@@ -191,15 +218,15 @@ function findOverlap(a, b) {
   return findOverlap(a, b.substring(0, b.length - 1));
 }
 
-
+// console.log(alreadyTranslated[0], alreadyTranslated[1])
 for (var i = 0; i < elements.length; i++) {
     var element = elements[i];
 
     for (var j = 0; j < element.childNodes.length; j++) {
         var node = element.childNodes[j];
-
-        if (node.nodeType === 3) {
+        if (node.nodeType === 3 && node !== alreadyTranslated[0] && node !== alreadyTranslated[1]) {
             var text = node.nodeValue;
+            console.log(node, text, alreadyTranslated[0],  alreadyTranslated[1])
             var replacedText = convertText(text, "Heiltsuk Duolos", "Unicode")
             if (replacedText !== text) {
                 element.replaceChild(document.createTextNode(replacedText), node);
